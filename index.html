@@ -235,6 +235,12 @@ h1{
 }
 .knop:hover,.knop:focus-visible{background:var(--riet);gap:22px}
 .knop .arrow{font-family:var(--disp)}
+.contact-acties{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:44px}
+.contact-acties .knop{margin-top:0;padding:16px 26px;letter-spacing:.22em}
+@media(max-width:620px){
+  .contact-acties{align-items:stretch;flex-direction:column;margin-inline:auto;max-width:320px}
+  .contact-acties .knop{justify-content:center}
+}
 .boeken .sub{margin-top:20px;font-size:12.5px;color:var(--grijs);letter-spacing:.04em}
 
 /* ---------- footer ---------- */
@@ -384,8 +390,12 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
     <svg class="boek-merk" viewBox="349 5.5 68 88" aria-hidden="true"><g fill="none" stroke="var(--riet)" stroke-width="2.4" stroke-linecap="round"><path d="M352.07,89.86c-.55-23.34-.12-81,35.51-81"/><path d="M367.07,89.86c0-27.49,9.78-66,36-66"/><path d="M380.57,89.86c0-23.34,7.01-46.69,33-46.69"/></g></svg>
     <h2>Kom aanwaaien.</h2>
     <p class="lead" style="margin:18px auto 0">Aanwaaien is met veel liefde, architectonische aandacht en hoogwaardige materialen ingericht. De eigenaren delen deze bijzondere plek graag met gasten die de esthetiek en de zorg van dit designhuis weten te waarderen — zodat het een plek blijft om telkens weer naar terug te keren.</p>
-    <a class="knop" href="#" onclick="return false">Beschikbaarheid bekijken <span class="arrow">→</span></a>
-    <p class="sub">Reserveringen via aanwaaien-schier.nl · reactie binnen 24 uur</p>
+    <div class="contact-acties" aria-label="Neem contact op over beschikbaarheid">
+      <a class="knop" href="mailto:info@aanwaaien.nl">E-mail <span class="arrow">→</span></a>
+      <a class="knop" href="tel:+31646088841">Bel 06-46088841 <span class="arrow">→</span></a>
+      <a class="knop" href="https://wa.me/31646088841" target="_blank" rel="noopener noreferrer">WhatsApp <span class="arrow">→</span></a>
+    </div>
+    <p class="sub">Informeer direct naar de beschikbaarheid · reactie binnen 24 uur</p>
   </div>
 </section>
 
