@@ -181,17 +181,21 @@ h1{
 .galerij{padding:clamp(110px,15vh,190px) 0 0}
 .g-grid{
   margin-top:clamp(44px,6vh,70px);
-  display:grid;grid-template-columns:repeat(12,1fr);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:clamp(14px,2vw,26px);
 }
 .g-grid figure{overflow:hidden;border-radius:2px;position:relative}
-.g-grid img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.6,.2,1)}
+.g-grid figure:nth-child(5n+1){grid-column:1/-1}
+.g-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.6,.2,1)}
 .g-grid figure:hover img{transform:scale(1.035)}
 @media (prefers-reduced-motion: reduce){.g-grid figure:hover img{transform:none}}
-.g1{grid-column:1/span 7;aspect-ratio:4/3}
-.g2{grid-column:8/span 5;aspect-ratio:4/5}
-.g3{grid-column:1/-1;aspect-ratio:21/9}
-@media(max-width:720px){.g1,.g2,.g3{grid-column:1/-1;aspect-ratio:4/3}}
+.g-grid figcaption{padding-top:12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--grijs)}
+.g-groep{margin-top:clamp(64px,9vh,110px)}
+.g-groep h3{font-family:var(--disp);font-weight:500;font-size:clamp(27px,3vw,38px);line-height:1.2}
+@media(max-width:720px){
+  .g-grid{grid-template-columns:1fr}
+  .g-grid figure,.g-grid figure:nth-child(5n+1){grid-column:1}
+}
 
 /* ---------- eiland ---------- */
 .eiland{
@@ -356,11 +360,64 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
       <p class="eyebrow"><span class="streep"></span>Beelden</p>
       <h2>Licht dat het werk doet.</h2>
     </div>
-    <div class="g-grid">
-      <figure class="g1 rv"><img src="img/vlonder-rietveld.jpg" alt="Vlonderpad langs het rietveld naar het zwarte huis bij zonsondergang" loading="lazy"></figure>
-      <figure class="g2 rv"><img src="img/avondzon-binnen.jpg" alt="Avondzon valt door de open hoekdeuren naar binnen" loading="lazy"></figure>
-      <figure class="g3 rv"><img src="img/gevel-avond.jpg" alt="Panorama van het vlonderpad langs het riet in het avondlicht" loading="lazy"></figure>
-    </div>
+    <section class="g-groep" aria-labelledby="galerij-buiten">
+      <h3 class="rv" id="galerij-buiten">Buiten</h3>
+      <div class="g-grid">
+        <figure class="rv"><img src="img/full-house.jpg" alt="Het volledige zwarte vakantiehuis tussen het groen" loading="lazy"><figcaption>Het huis in het groen</figcaption></figure>
+        <figure class="rv"><img src="img/house-from-meadow.jpg" alt="Het vakantiehuis gezien vanaf het weiland" loading="lazy"><figcaption>Vanaf het weiland</figcaption></figure>
+        <figure class="rv"><img src="img/house-from-meadow-2.jpg" alt="Het zwarte vakantiehuis aan de rand van het weiland" loading="lazy"><figcaption>Aan de rand van het veld</figcaption></figure>
+        <figure class="rv"><img src="img/house-front.jpg" alt="De voorzijde van het zwarte houten vakantiehuis" loading="lazy"><figcaption>De voorzijde</figcaption></figure>
+        <figure class="rv"><img src="img/exterior-window.jpg" alt="Groot raam in de zwarte houten gevel" loading="lazy"><figcaption>Raam op het landschap</figcaption></figure>
+        <figure class="rv"><img src="img/terrace.jpg" alt="Het houten terras tussen het riet" loading="lazy"><figcaption>Terras aan het riet</figcaption></figure>
+        <figure class="rv"><img src="img/terrace-kitchen-living-room.jpg" alt="Terras met zicht op de woonkamer en keuken" loading="lazy"><figcaption>Binnen en buiten</figcaption></figure>
+        <figure class="rv"><img src="img/terrace-dining.jpg" alt="Gedekte eettafel op het houten terras" loading="lazy"><figcaption>Tafelen op het terras</figcaption></figure>
+        <figure class="rv"><img src="img/sunset.jpg" alt="Zonsondergang boven het landschap rond het huis" loading="lazy"><figcaption>De laatste zon</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="g-groep" aria-labelledby="galerij-wonen">
+      <h3 class="rv" id="galerij-wonen">Wonen &amp; koken</h3>
+      <div class="g-grid">
+        <figure class="rv"><img src="img/living-room-view.jpg" alt="Woonkamer met panoramaraam en uitzicht over het riet" loading="lazy"><figcaption>Wonen met uitzicht</figcaption></figure>
+        <figure class="rv"><img src="img/living-room-sofa.jpg" alt="Ruime lichte hoekbank tegen een houten wand" loading="lazy"><figcaption>De zachte hoek</figcaption></figure>
+        <figure class="rv"><img src="img/lounge-chair.jpg" alt="Ronde loungestoel bij de glazen hoekpui" loading="lazy"><figcaption>Een plek aan het raam</figcaption></figure>
+        <figure class="rv"><img src="img/passage-living-room.jpg" alt="Houten passage naar de lichte woonkamer" loading="lazy"><figcaption>Doorzicht naar buiten</figcaption></figure>
+        <figure class="rv"><img src="img/kitchen.jpg" alt="Lichte houten keuken met rustig werkblad" loading="lazy"><figcaption>De keuken</figcaption></figure>
+        <figure class="rv"><img src="img/kitchen-countertop.jpg" alt="Werkblad en details in de houten keuken" loading="lazy"><figcaption>Aan het aanrecht</figcaption></figure>
+        <figure class="rv"><img src="img/kitchen-living-room.jpg" alt="Open keuken verbonden met de woonkamer" loading="lazy"><figcaption>Samen koken en wonen</figcaption></figure>
+        <figure class="rv"><img src="img/kitchen-living-room-2.jpg" alt="Overzicht van keuken en woonkamer" loading="lazy"><figcaption>De open leefruimte</figcaption></figure>
+        <figure class="rv"><img src="img/dining-table.jpg" alt="Houten eettafel in de lichte leefruimte" loading="lazy"><figcaption>Lang tafelen</figcaption></figure>
+        <figure class="rv"><img src="img/living-room-chair.jpg" alt="Comfortabele stoel in de houten woonkamer" loading="lazy"><figcaption>Een rustige stoel</figcaption></figure>
+        <figure class="rv"><img src="img/reading-on-sofa.jpg" alt="Lezen op de bank in de lichte woonkamer" loading="lazy"><figcaption>Even niets</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="g-groep" aria-labelledby="galerij-slapen">
+      <h3 class="rv" id="galerij-slapen">Slapen</h3>
+      <div class="g-grid">
+        <figure class="rv"><img src="img/bedroom-1.jpg" alt="Slaapkamer één met houten wanden" loading="lazy"><figcaption>Slaapkamer één</figcaption></figure>
+        <figure class="rv"><img src="img/bedroom-2.jpg" alt="Slaapkamer twee met zacht bedlinnen" loading="lazy"><figcaption>Slaapkamer twee</figcaption></figure>
+        <figure class="rv"><img src="img/bedroom-3.jpg" alt="Slaapkamer drie in lichte houttinten" loading="lazy"><figcaption>Slaapkamer drie</figcaption></figure>
+        <figure class="rv"><img src="img/bedroom-4-hallway.jpg" alt="Slaapkamer vier gezien vanuit de gang" loading="lazy"><figcaption>Slaapkamer vier</figcaption></figure>
+        <figure class="rv"><img src="img/bedroom-4-windows.jpg" alt="Slaapkamer vier met ramen op het landschap" loading="lazy"><figcaption>Wakker worden met uitzicht</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="g-groep" aria-labelledby="galerij-badkamer">
+      <h3 class="rv" id="galerij-badkamer">Badkamer</h3>
+      <div class="g-grid">
+        <figure class="rv"><img src="img/bathroom.jpg" alt="Rustige badkamer met natuurlijke materialen" loading="lazy"><figcaption>De badkamer</figcaption></figure>
+        <figure class="rv"><img src="img/bathroom-shower.jpg" alt="Inloopdouche in de badkamer" loading="lazy"><figcaption>De inloopdouche</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="g-groep" aria-labelledby="galerij-details">
+      <h3 class="rv" id="galerij-details">Details</h3>
+      <div class="g-grid">
+        <figure class="rv"><img src="img/espresso.jpg" alt="Vers gezette espresso in het vakantiehuis" loading="lazy"><figcaption>Tijd voor espresso</figcaption></figure>
+        <figure class="rv"><img src="img/hammock.jpg" alt="Hangmat op een rustige plek bij het huis" loading="lazy"><figcaption>Langzaam aan</figcaption></figure>
+      </div>
+    </section>
   </div>
 </section>
 
