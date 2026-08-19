@@ -154,6 +154,31 @@ h1{
 @media(max-width:860px){.feiten .wrap{grid-template-columns:1fr 1fr}.feit:nth-child(3){border-left:0;padding-left:0}.feit{padding:24px 20px}}
 @media(max-width:480px){.feiten .wrap{grid-template-columns:1fr}.feit{border-left:0;padding:22px 0;border-top:1px solid rgba(34,36,31,.14)}.feit:first-child{border-top:0}}
 
+/* ---------- accommodatie ---------- */
+.accommodatie{padding:clamp(90px,13vh,160px) 0 0}
+.accommodatie-grid{
+  display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+  gap:clamp(42px,7vw,96px);align-items:start;
+  margin-top:clamp(44px,7vh,76px);
+}
+.accommodatie-card{border-top:1px solid rgba(34,36,31,.2);padding-top:26px}
+.accommodatie-card h3{
+  font-family:var(--disp);font-weight:500;
+  font-size:clamp(30px,3.5vw,44px);line-height:1.15;margin-bottom:18px;
+}
+.accommodatie-card p{font-size:15.5px;font-weight:300}
+.accommodatie-card ul{list-style:none;margin-top:25px;border-top:1px solid rgba(34,36,31,.14)}
+.accommodatie-card li{
+  position:relative;padding:11px 0 11px 24px;
+  border-bottom:1px solid rgba(34,36,31,.14);
+  font-size:14.5px;font-weight:300;line-height:1.55;
+}
+.accommodatie-card li::before{
+  content:'\2014';position:absolute;left:0;top:11px;
+  color:var(--riet);font-family:var(--disp);
+}
+@media(max-width:860px){.accommodatie-grid{grid-template-columns:1fr}}
+
 /* ---------- het huis: alternating ---------- */
 .huis{padding:clamp(90px,13vh,170px) 0 0}
 .blok{
@@ -309,6 +334,41 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   </div>
 </section>
 
+<section class="accommodatie" id="accommodatie">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow"><span class="streep"></span>Accommodatie</p>
+      <h2>Alles voor een<br>fijn verblijf.</h2>
+    </div>
+    <div class="accommodatie-grid">
+      <article class="accommodatie-card rv" id="prijzen">
+        <h3>Prijzen</h3>
+        <p>Aanwaaien kan geboekt worden voor een week, een midweek, of een weekend. Prijzen variëren van €175 per nacht in het laagseizoen tot €350 per nacht in het hoogseizoen. Stuur ons een bericht of bel ons met je gewenste data, en we maken graag een passende offerte.</p>
+      </article>
+      <article class="accommodatie-card rv" id="over-het-huis">
+        <h3>Over het huis</h3>
+        <p>Aanwaaien is gebouwd met aandacht voor natuurlijk licht, comfort en natuurlijke materialen die het eilandgevoel compleet maken.</p>
+        <ul>
+          <li>100 m² woonoppervlak</li>
+          <li>4 slaapkamers met in totaal 8 slaapplekken, waarvan 1 slaapkamer met stapelbed</li>
+          <li>Ruime zuidwest georiënteerde woonkamer met grote hoekbank</li>
+          <li>Zeer volledig uitgeruste eetkeuken, direct grenzend aan het terras</li>
+          <li>Luxe badkamer met bad en ruime inloopdouche</li>
+          <li>Woon- en slaapgedeelte gescheiden van elkaar, zodat iedereen rustig kan slapen</li>
+          <li>Ruime entree/hal met voldoende ruimte voor schoenen en jassen</li>
+          <li>Groot terras met een tafel voor 10 personen en ruime buitenbank</li>
+          <li>Volledig geïsoleerd</li>
+          <li>Vloerverwarming</li>
+          <li>Glasvezel internet</li>
+          <li>Ongeveer 10 minuten lopen naar het dorp</li>
+          <li>Ongeveer 5 minuten lopen naar de duinen</li>
+          <li>En misschien wel het mooiste zonsondergang van het eiland</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section class="huis" id="huis">
   <div class="wrap">
     <div class="rv">
@@ -366,10 +426,8 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
         <figure class="rv"><img src="img/full-house.jpg" alt="Het volledige zwarte vakantiehuis tussen het groen" loading="lazy"><figcaption>Het huis in het groen</figcaption></figure>
         <figure class="rv"><img src="img/house-from-meadow.jpg" alt="Het vakantiehuis gezien vanaf het weiland" loading="lazy"><figcaption>Vanaf het weiland</figcaption></figure>
         <figure class="rv"><img src="img/house-from-meadow-2.jpg" alt="Het zwarte vakantiehuis aan de rand van het weiland" loading="lazy"><figcaption>Aan de rand van het veld</figcaption></figure>
-        <figure class="rv"><img src="img/house-front.jpg" alt="De voorzijde van het zwarte houten vakantiehuis" loading="lazy"><figcaption>De voorzijde</figcaption></figure>
         <figure class="rv"><img src="img/exterior-window.jpg" alt="Groot raam in de zwarte houten gevel" loading="lazy"><figcaption>Raam op het landschap</figcaption></figure>
         <figure class="rv"><img src="img/terrace.jpg" alt="Het houten terras tussen het riet" loading="lazy"><figcaption>Terras aan het riet</figcaption></figure>
-        <figure class="rv"><img src="img/terrace-kitchen-living-room.jpg" alt="Terras met zicht op de woonkamer en keuken" loading="lazy"><figcaption>Binnen en buiten</figcaption></figure>
         <figure class="rv"><img src="img/terrace-dining.jpg" alt="Gedekte eettafel op het houten terras" loading="lazy"><figcaption>Tafelen op het terras</figcaption></figure>
         <figure class="rv"><img src="img/sunset.jpg" alt="Zonsondergang boven het landschap rond het huis" loading="lazy"><figcaption>De laatste zon</figcaption></figure>
       </div>
@@ -449,8 +507,8 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
     <p class="lead" style="margin:18px auto 0">Aanwaaien is met veel liefde, architectonische aandacht en hoogwaardige materialen ingericht. De eigenaren delen deze bijzondere plek graag met gasten die de esthetiek en de zorg van dit designhuis weten te waarderen — zodat het een plek blijft om telkens weer naar terug te keren.</p>
     <div class="contact-acties" aria-label="Neem contact op over beschikbaarheid">
       <a class="knop" href="mailto:info@aanwaaien.nl">E-mail <span class="arrow">→</span></a>
-      <a class="knop" href="tel:+31646088841">Bel 06-46088841 <span class="arrow">→</span></a>
-      <a class="knop" href="https://wa.me/31646088841" target="_blank" rel="noopener noreferrer">WhatsApp <span class="arrow">→</span></a>
+      <a class="knop" href="tel:+31648775101">Bel 06 48 77 51 01 <span class="arrow">→</span></a>
+      <a class="knop" href="https://wa.me/31648775101" target="_blank" rel="noopener noreferrer">WhatsApp <span class="arrow">→</span></a>
     </div>
     <p class="sub">Informeer direct naar de beschikbaarheid · reactie binnen 24 uur</p>
   </div>
