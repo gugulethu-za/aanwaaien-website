@@ -143,6 +143,29 @@ h1{
 .intro .lead strong{font-weight:600}
 @media(max-width:860px){.intro-grid{grid-template-columns:1fr}.ghost{font-size:110px}}
 
+/* ---------- editorial highlight ---------- */
+.highlight{padding:0 0 clamp(90px,13vh,150px)}
+.highlight-grid{
+  display:grid;grid-template-columns:repeat(12,minmax(0,1fr));
+  grid-template-rows:auto auto;gap:clamp(14px,2vw,26px);align-items:start;
+  padding-bottom:clamp(18px,3vw,42px);
+}
+.highlight figure{position:relative;margin:0}
+.highlight-main{grid-column:1 / span 8;grid-row:1 / span 2}
+.highlight-side-one{grid-column:9 / span 4;grid-row:1;margin-top:12%}
+.highlight-side-two{grid-column:8 / span 4;grid-row:2;margin-top:-9%;z-index:2}
+.highlight img{width:100%;height:auto;border-radius:2px}
+.highlight figcaption{
+  margin-top:11px;font-family:var(--disp);font-style:italic;font-weight:500;
+  font-size:17px;letter-spacing:.03em;color:var(--riet);
+}
+@media(max-width:720px){
+  .highlight-grid{display:block;padding-bottom:0}
+  .highlight-main{width:94%}
+  .highlight-side-one{width:66%;margin:26px 0 0 auto}
+  .highlight-side-two{width:72%;margin:22px 0 0 7%}
+}
+
 /* ---------- feiten strip ---------- */
 .feiten{border-top:1px solid rgba(34,36,31,.14);border-bottom:1px solid rgba(34,36,31,.14)}
 .feiten .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
@@ -322,6 +345,23 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
       <p class="lead" style="margin-top:22px">Deze in 2026 geheel nieuw gebouwde design-villa biedt een hoogwaardig en comfortabel thuis voor maximaal zes tot acht personen. Het interieur ademt rust en warmte dankzij het consequent doorgevoerde gebruik van prachtig, licht populierenhout.</p>
       <p class="lead" style="margin-top:1.2em">Dit natuurlijke materiaal vormt een harmonieus samenspel met de grote raampartijen, die het unieke eilandlicht en de seizoenen naar binnen halen. In de grote slaapkamer word je wakker met een weids, onbelemmerd uitzicht over het landschap — een levend schilderij dat elk moment van de dag verandert.</p>
     </div>
+  </div>
+</section>
+
+<section class="highlight" aria-label="Een eerste indruk van Aanwaaien">
+  <div class="wrap highlight-grid">
+    <figure class="highlight-main rv">
+      <img src="img/panoramaraam.jpg" alt="Rieten fauteuil voor het panoramaraam met vrij uitzicht over het rietveld" loading="lazy">
+      <figcaption>uitzicht</figcaption>
+    </figure>
+    <figure class="highlight-side-one rv">
+      <img src="img/vlonder-rietveld.jpg" alt="De houten vlonder aan de rand van het rietveld" loading="lazy">
+      <figcaption>binnen &amp; buiten</figcaption>
+    </figure>
+    <figure class="highlight-side-two rv">
+      <img src="img/avondzon-binnen.jpg" alt="Warm avondlicht dat door de ramen naar binnen valt" loading="lazy">
+      <figcaption>avondlicht</figcaption>
+    </figure>
   </div>
 </section>
 
