@@ -146,15 +146,12 @@ h1{
 /* ---------- editorial highlight ---------- */
 .highlight{padding:0 0 clamp(90px,13vh,150px)}
 .highlight-grid{
-  display:grid;grid-template-columns:repeat(12,minmax(0,1fr));
-  grid-template-rows:auto auto;gap:clamp(14px,2vw,26px);align-items:start;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(14px,2vw,26px);align-items:start;
   padding-bottom:clamp(18px,3vw,42px);
 }
 .highlight figure{position:relative;margin:0}
-.highlight-main{grid-column:1 / span 8;grid-row:1 / span 2}
-.highlight-side-one{grid-column:9 / span 4;grid-row:1;margin-top:12%}
-.highlight-side-two{grid-column:8 / span 4;grid-row:2;margin-top:-9%;z-index:2}
-.highlight img{width:100%;height:auto;border-radius:2px}
+.highlight img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px}
 .highlight figcaption{
   margin-top:11px;font-family:var(--disp);font-style:italic;font-weight:500;
   font-size:17px;letter-spacing:.03em;color:var(--riet);
