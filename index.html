@@ -303,6 +303,117 @@ footer .merk-link .merk{height:40px;width:auto;display:block}
 .naam-voet .naam-svg{height:19px;width:auto;display:block}
 footer p{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grijs)}
 footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;font-size:15px;letter-spacing:.04em}
+
+/* ---------- beschikbaarheid ---------- */
+.beschikbaarheid{
+  padding:clamp(100px,14vh,180px) 0 0;
+}
+.beschikbaarheid-kop{
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(280px,1.2fr);
+  gap:clamp(30px,7vw,96px);align-items:end;
+}
+.beschikbaarheid-kop .lead{padding-bottom:7px}
+.availability-shell{
+  margin-top:clamp(44px,7vh,76px);padding:clamp(28px,4vw,52px) 0 0;
+  border-top:1px solid rgba(34,36,31,.2);
+}
+.availability-loading{color:var(--grijs);font-size:14px;font-weight:300}
+.availability-error{
+  padding:18px 0;border-top:1px solid rgba(34,36,31,.18);
+  border-bottom:1px solid rgba(34,36,31,.18);color:var(--grijs);font-size:14px;
+}
+.availability-toolbar{
+  display:grid;grid-template-columns:48px minmax(0,1fr) 48px;
+  align-items:center;gap:18px;margin-bottom:30px;
+}
+.availability-toolbar p{
+  text-align:center;color:var(--grijs);font-size:11px;font-weight:600;
+  letter-spacing:.24em;text-transform:uppercase;
+}
+.availability-nav{
+  width:48px;height:48px;border:1px solid rgba(34,36,31,.24);border-radius:2px;
+  color:var(--inkt);background:transparent;font-family:var(--disp);font-size:28px;
+  line-height:1;cursor:pointer;transition:color .3s,background .3s,border-color .3s;
+}
+.availability-nav:not(:disabled):hover,.availability-nav:not(:disabled):focus-visible{
+  color:var(--berk);background:var(--riet);border-color:var(--riet);outline:none;
+}
+.availability-nav:focus-visible{box-shadow:0 0 0 2px var(--berk),0 0 0 4px var(--schemer)}
+.availability-nav:disabled{opacity:.28;cursor:not-allowed}
+.availability-months{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(32px,6vw,80px);
+}
+.availability-month h3{
+  margin-bottom:18px;font-family:var(--disp);font-size:clamp(28px,3vw,38px);
+  font-weight:500;line-height:1.15;text-transform:capitalize;
+}
+.availability-weekdays,.availability-days{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;
+}
+.availability-weekdays{margin-bottom:7px}
+.availability-weekdays span{
+  padding:5px 0;text-align:center;color:var(--riet);font-size:10px;
+  font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+}
+.availability-day,.availability-blank{aspect-ratio:1;min-width:0}
+.availability-day{
+  display:grid;place-items:center;border:1px solid rgba(34,36,31,.18);border-radius:50%;
+  color:var(--inkt);background:transparent;font:400 14px/1 var(--body);cursor:pointer;
+  transition:border-color .2s,background .2s,color .2s;
+}
+.availability-day:not(:disabled):hover,.availability-day:not(:disabled):focus-visible{
+  border-color:var(--riet);outline:2px solid var(--riet);outline-offset:2px;
+}
+.availability-day:disabled{cursor:not-allowed}
+.availability-day.is-non-changeover{color:var(--grijs);border-color:transparent;cursor:default}
+.availability-day.is-unavailable{
+  color:rgba(34,36,31,.42);background:rgba(217,205,182,.58);
+  border-color:transparent;text-decoration:line-through;
+}
+.availability-day.is-turnover{
+  background:linear-gradient(90deg,transparent 50%,rgba(217,205,182,.72) 50%);
+  text-decoration:none;
+}
+.availability-day.is-selected,.availability-day.is-in-range{
+  color:var(--berk);background:var(--riet);border-color:var(--riet);text-decoration:none;
+}
+.availability-day.is-turnover.is-selected,.availability-day.is-turnover.is-in-range{
+  color:var(--inkt);
+  background:linear-gradient(90deg,var(--riet-licht) 50%,rgba(217,205,182,.72) 50%);
+}
+.availability-day.is-outside{visibility:hidden}
+.availability-meta{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:28px;
+  margin-top:clamp(30px,5vw,54px);padding-top:24px;
+  border-top:1px solid rgba(34,36,31,.14);
+}
+.availability-legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:10px}
+.availability-legend span{
+  display:inline-flex;align-items:center;gap:7px;color:var(--grijs);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+}
+.availability-dot{width:11px;height:11px;border:1px solid rgba(34,36,31,.24);border-radius:50%}
+.availability-dot.is-busy{background:var(--essen);border-color:transparent}
+.availability-dot.is-turnover{background:linear-gradient(90deg,transparent 50%,var(--essen) 50%)}
+.availability-selection{color:var(--grijs);font-family:var(--disp);font-size:18px;font-style:italic}
+.availability-mail{margin-top:0;white-space:nowrap}
+.availability-mail[aria-disabled="true"]{opacity:.38;pointer-events:none}
+.prijzen-link{
+  display:inline-flex;align-items:center;gap:10px;margin-top:22px;color:var(--riet);
+  font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+}
+.prijzen-link:hover,.prijzen-link:focus-visible{color:var(--houtskool)}
+@media(max-width:760px){
+  .beschikbaarheid-kop{grid-template-columns:1fr}.availability-months{grid-template-columns:1fr}
+  .availability-month:nth-child(2){display:none}.availability-meta{align-items:stretch;flex-direction:column}
+  .availability-mail{justify-content:center;width:100%}.availability-toolbar p{letter-spacing:.14em}
+}
+@media(max-width:420px){
+  .availability-weekdays,.availability-days{gap:3px}.availability-day{font-size:13px}
+  .availability-toolbar{grid-template-columns:42px minmax(0,1fr) 42px;gap:10px}
+  .availability-nav{width:42px;height:42px}
+}
 </style>
 </head>
 <body>
@@ -327,7 +438,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
     <h1>Schier<br>in Stijl.</h1>
     <div class="hero-foot">
       <p>Aan de rand van het dorp, waar de horizon eindeloos is en de eilandrust meteen voelbaar wordt, ligt Aanwaaien — een van de weinige moderne designhuizen op het eiland.</p>
-      <a class="knop" href="#boeken" style="margin-top:0">Boek een verblijf <span class="arrow">→</span></a>
+      <a class="knop" href="#beschikbaarheid" style="margin-top:0">Boek een verblijf <span class="arrow">→</span></a>
     </div>
   </div>
   <div class="scroll-cue" aria-hidden="true"></div>
@@ -383,6 +494,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
       <article class="accommodatie-card rv" id="prijzen">
         <h3>Prijzen</h3>
         <p>Aanwaaien kan geboekt worden voor een week, een midweek, of een weekend. Prijzen variëren van €175 per nacht in het laagseizoen tot €350 per nacht in het hoogseizoen. Stuur ons een bericht of bel ons met je gewenste data, en we maken graag een passende offerte.</p>
+        <a class="prijzen-link" href="#beschikbaarheid">Bekijk beschikbaarheid <span aria-hidden="true">↓</span></a>
       </article>
       <article class="accommodatie-card rv" id="over-het-huis">
         <h3>Over het huis</h3>
@@ -405,6 +517,44 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
           <li>En misschien wel het mooiste zonsondergang van het eiland</li>
         </ul>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="beschikbaarheid" id="beschikbaarheid" aria-labelledby="beschikbaarheid-titel">
+  <div class="wrap">
+    <div class="beschikbaarheid-kop rv">
+      <div>
+        <p class="eyebrow"><span class="streep"></span>Beschikbaarheid</p>
+        <h2 id="beschikbaarheid-titel">Kies een moment<br>om aan te waaien.</h2>
+      </div>
+      <p class="lead">Selecteer een vrije aankomst- en vertrekdag. Maandag en vrijdag zijn onze vaste wisseldagen; daarna vraag je de gekozen periode eenvoudig per e-mail aan.</p>
+    </div>
+
+    <div class="availability-shell rv" id="availability-calendar">
+      <p class="availability-loading" data-calendar-loading role="status">Beschikbaarheid laden…</p>
+      <p class="availability-error" data-calendar-error role="alert" hidden>Availability temporarily unavailable</p>
+
+      <div data-calendar-content hidden>
+        <div class="availability-toolbar" aria-label="Kalendernavigatie">
+          <button class="availability-nav" data-calendar-previous type="button" aria-label="Vorige maand">‹</button>
+          <p>Alleen maandag en vrijdag zijn wisseldagen</p>
+          <button class="availability-nav" data-calendar-next type="button" aria-label="Volgende maand">›</button>
+        </div>
+        <div class="availability-months" data-calendar-months aria-label="Beschikbaarheidskalender Aanwaaien"></div>
+
+        <div class="availability-meta">
+          <div>
+            <div class="availability-legend" aria-label="Legenda">
+              <span><i class="availability-dot"></i>Beschikbaar</span>
+              <span><i class="availability-dot is-busy"></i>Bezet</span>
+              <span><i class="availability-dot is-turnover"></i>Wisseldag</span>
+            </div>
+            <p class="availability-selection" data-calendar-selection aria-live="polite">Selecteer een beschikbare aankomstdag</p>
+          </div>
+          <a class="knop availability-mail" data-calendar-mail aria-disabled="true">Vraag deze periode aan <span class="arrow">→</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -562,6 +712,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   </div>
 </footer>
 
+<script type="module" src="assets/availability-calendar.js"></script>
 <script>
 const navEl = document.querySelector('nav');
 const hero = document.querySelector('header');
