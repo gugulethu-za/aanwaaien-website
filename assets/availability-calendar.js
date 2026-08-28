@@ -1,4 +1,4 @@
-import { canStay, isChangeover } from "./calendar-rules.js";
+import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
 
 const root = document.querySelector("#availability-calendar");
 
@@ -50,7 +50,7 @@ if (root) {
           : changeover
             ? "beschikbare wisseldag"
             : "beschikbaar binnen een verblijf";
-    return `${pretty(date)} — ${description}`;
+    return `${pretty(date)}, ${description}`;
   }
 
   function render() {
@@ -101,11 +101,21 @@ if (root) {
           if (status === "turnover") button.classList.add("is-turnover");
           if (!changeover) button.classList.add("is-non-changeover");
 
-          const validArrival = !arrival && status === "available" && changeover;
+          const validArrival = !arrival && isValidArrival(availability, date);
           const validDeparture =
-            arrival && date > arrival && changeover && canStay(availability, arrival, date);
+            !departure &&
+            arrival &&
+            date > arrival &&
+            changeover &&
+            canStay(availability, arrival, date);
+          const startsNewArrival = departure && isValidArrival(availability, date);
           const cancelsArrival = arrival && !departure && date === arrival;
-          button.disabled = !(validArrival || validDeparture || cancelsArrival);
+          button.disabled = !(
+            validArrival ||
+            validDeparture ||
+            startsNewArrival ||
+            cancelsArrival
+          );
           if (date === arrival || date === departure) button.classList.add("is-selected");
           if (arrival && departure && date >= arrival && date <= departure) {
             button.classList.add("is-in-range");
@@ -134,9 +144,9 @@ if (root) {
       departure = null;
     }
 
-    if (!arrival) {
+    if (!arrival && isValidArrival(availability, date)) {
       arrival = date;
-      selectionNode.textContent = `Aankomst: ${pretty(date)} — kies een vertrekdag`;
+      selectionNode.textContent = `Aankomst: ${pretty(date)}. Kies een vertrekdag.`;
       mail.removeAttribute("href");
       mail.setAttribute("aria-disabled", "true");
     } else if (canStay(availability, arrival, date)) {

@@ -3,6 +3,10 @@ export function isChangeover(date) {
   return weekday === 1 || weekday === 5;
 }
 
+export function isValidArrival(availability, date) {
+  return isChangeover(date) && availability.get(date) === "available";
+}
+
 export function canStay(availability, start, end) {
   if (!start || !end || end <= start || !isChangeover(start) || !isChangeover(end)) {
     return false;
@@ -22,4 +26,3 @@ function addDays(value, count) {
   date.setUTCDate(date.getUTCDate() + count);
   return date.toISOString().slice(0, 10);
 }
-
