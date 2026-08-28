@@ -398,7 +398,8 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 .availability-dot.is-turnover{background:linear-gradient(90deg,transparent 50%,var(--essen) 50%)}
 .availability-selection{color:var(--grijs);font-family:var(--disp);font-size:18px;font-style:italic}
 .availability-mail{margin-top:0;white-space:nowrap}
-.availability-mail[aria-disabled="true"]{opacity:.38;pointer-events:none}
+.availability-mail{border:0;cursor:pointer;font-family:var(--body)}
+.availability-mail:disabled,.availability-mail[aria-disabled="true"]{opacity:.38;pointer-events:none}
 .prijzen-link{
   display:inline-flex;align-items:center;gap:10px;margin-top:22px;color:var(--riet);
   font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
@@ -552,7 +553,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
             </div>
             <p class="availability-selection" data-calendar-selection aria-live="polite">Selecteer een beschikbare aankomstdag</p>
           </div>
-          <a class="knop availability-mail" data-calendar-mail aria-disabled="true">Vraag deze periode aan <span class="arrow">→</span></a>
+          <button class="knop availability-mail" data-calendar-mail type="button" aria-disabled="true" disabled>Vraag deze periode aan <span class="arrow">→</span></button>
         </div>
       </div>
     </div>

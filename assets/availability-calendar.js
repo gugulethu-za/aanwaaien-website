@@ -1,4 +1,5 @@
 import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
+import { buildRequestMailto } from "./request-email.js";
 
 const root = document.querySelector("#availability-calendar");
 
@@ -30,6 +31,7 @@ if (root) {
   let visibleMonth;
   let arrival = null;
   let departure = null;
+  let availabilityLoaded = false;
 
   const dateObject = (value) => new Date(`${value}T00:00:00Z`);
   const pretty = (value) => dateFormatter.format(dateObject(value));
@@ -130,6 +132,7 @@ if (root) {
 
     previous.disabled = visibleMonth <= firstMonth;
     next.disabled = addMonths(visibleMonth, 1) >= lastMonth;
+    updateRequestButton();
   }
 
   function selectDate(date) {
@@ -147,15 +150,10 @@ if (root) {
     if (!arrival && isValidArrival(availability, date)) {
       arrival = date;
       selectionNode.textContent = `Aankomst: ${pretty(date)}. Kies een vertrekdag.`;
-      mail.removeAttribute("href");
-      mail.setAttribute("aria-disabled", "true");
     } else if (canStay(availability, arrival, date)) {
       departure = date;
       const line = `${pretty(arrival)} t/m ${pretty(departure)}`;
       selectionNode.textContent = line;
-      const body = `Hallo,\n\nIs Aanwaaien beschikbaar van ${line}?\n\nMet vriendelijke groet,`;
-      mail.href = `mailto:info@aanwaaien.nl?subject=${encodeURIComponent("Beschikbaarheid Aanwaaien")}&body=${encodeURIComponent(body)}`;
-      mail.setAttribute("aria-disabled", "false");
     }
     render();
   }
@@ -164,9 +162,33 @@ if (root) {
     arrival = null;
     departure = null;
     selectionNode.textContent = "Selecteer een beschikbare aankomstdag";
-    mail.removeAttribute("href");
-    mail.setAttribute("aria-disabled", "true");
+    updateRequestButton();
   }
+
+  function updateRequestButton() {
+    const ready = Boolean(departure);
+    mail.disabled = !ready;
+    mail.setAttribute("aria-disabled", String(!ready));
+  }
+
+  mail.addEventListener("click", () => {
+    if (!departure) {
+      updateRequestButton();
+      return;
+    }
+
+    const mailto = buildRequestMailto({
+      arrival,
+      departure,
+      pretty,
+    });
+    const emailLink = document.createElement("a");
+    emailLink.href = mailto;
+    emailLink.hidden = true;
+    document.body.append(emailLink);
+    emailLink.click();
+    emailLink.remove();
+  });
 
   previous.addEventListener("click", () => {
     visibleMonth = addMonths(visibleMonth, -1);
@@ -202,13 +224,17 @@ if (root) {
     firstMonth = dates[0].slice(0, 7);
     lastMonth = dates.at(-1).slice(0, 7);
     visibleMonth = firstMonth;
+    availabilityLoaded = true;
+    error.hidden = true;
     loading.hidden = true;
     content.hidden = false;
     render();
   } catch (reason) {
     console.error("Availability loading failed", reason);
-    loading.hidden = true;
-    content.hidden = true;
-    error.hidden = false;
+    if (!availabilityLoaded) {
+      loading.hidden = true;
+      content.hidden = true;
+      error.hidden = false;
+    }
   }
 }
