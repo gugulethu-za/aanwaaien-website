@@ -313,6 +313,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   gap:clamp(30px,7vw,96px);align-items:end;
 }
 .beschikbaarheid-kop .lead{padding-bottom:7px}
+.beschikbaarheid-kop .lead p+p{margin-top:1em}
 .availability-shell{
   margin-top:clamp(44px,7vh,76px);padding:clamp(28px,4vw,52px) 0 0;
   border-top:1px solid rgba(34,36,31,.2);
@@ -359,7 +360,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 .availability-day,.availability-blank{aspect-ratio:1;min-width:0}
 .availability-day{
   display:grid;place-items:center;border:1px solid rgba(34,36,31,.18);border-radius:50%;
-  color:var(--inkt);background:transparent;font:400 14px/1 var(--body);cursor:pointer;
+  color:var(--inkt);background:rgba(122,135,96,.28);font:400 14px/1 var(--body);cursor:pointer;
   transition:border-color .2s,background .2s,color .2s;
 }
 .availability-day:not(:disabled):hover,.availability-day:not(:disabled):focus-visible{
@@ -368,11 +369,11 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 .availability-day:disabled{cursor:not-allowed}
 .availability-day.is-non-changeover{color:var(--grijs);border-color:transparent;cursor:default}
 .availability-day.is-unavailable{
-  color:rgba(34,36,31,.42);background:rgba(217,205,182,.58);
+  color:rgba(34,36,31,.58);background:rgba(183,108,98,.4);
   border-color:transparent;text-decoration:line-through;
 }
 .availability-day.is-turnover{
-  background:linear-gradient(90deg,transparent 50%,rgba(217,205,182,.72) 50%);
+  background:linear-gradient(90deg,rgba(122,135,96,.28) 50%,rgba(183,108,98,.4) 50%);
   text-decoration:none;
 }
 .availability-day.is-selected,.availability-day.is-in-range{
@@ -380,7 +381,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 }
 .availability-day.is-turnover.is-selected,.availability-day.is-turnover.is-in-range{
   color:var(--inkt);
-  background:linear-gradient(90deg,var(--riet-licht) 50%,rgba(217,205,182,.72) 50%);
+  background:linear-gradient(90deg,var(--riet-licht) 50%,rgba(183,108,98,.4) 50%);
 }
 .availability-day.is-outside{visibility:hidden}
 .availability-meta{
@@ -393,9 +394,9 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   display:inline-flex;align-items:center;gap:7px;color:var(--grijs);
   font-size:11px;letter-spacing:.1em;text-transform:uppercase;
 }
-.availability-dot{width:11px;height:11px;border:1px solid rgba(34,36,31,.24);border-radius:50%}
-.availability-dot.is-busy{background:var(--essen);border-color:transparent}
-.availability-dot.is-turnover{background:linear-gradient(90deg,transparent 50%,var(--essen) 50%)}
+.availability-dot{width:11px;height:11px;background:rgba(122,135,96,.55);border:1px solid rgba(34,36,31,.24);border-radius:50%}
+.availability-dot.is-busy{background:rgba(183,108,98,.65);border-color:transparent}
+.availability-dot.is-turnover{background:linear-gradient(90deg,rgba(122,135,96,.55) 50%,rgba(183,108,98,.65) 50%)}
 .availability-selection{color:var(--grijs);font-family:var(--disp);font-size:18px;font-style:italic}
 .availability-mail{margin-top:0;white-space:nowrap}
 .availability-mail{border:0;cursor:pointer;font-family:var(--body)}
@@ -423,9 +424,9 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   <a class="merk-link" href="#top" aria-label="Aanwaaien — naar boven"><svg class="merk" viewBox="349 5.5 68 88" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M352.07,89.86c-.55-23.34-.12-81,35.51-81"/><path d="M367.07,89.86c0-27.49,9.78-66,36-66"/><path d="M380.57,89.86c0-23.34,7.01-46.69,33-46.69"/></g></svg></a>
   <ul>
     <li><a href="#huis">Het huis</a></li>
-    <li><a href="#galerij">Beelden</a></li>
     <li><a href="#eiland">Het eiland</a></li>
-    <li><a href="#boeken">Verblijf</a></li>
+    <li><a href="#boeken">Boeken</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
   <a class="naam" href="#top" aria-label="Aanwaaien"><svg class="naam-svg" viewBox="27.5 57 284.5 34" aria-hidden="true"><g fill="currentColor"><path d="M36.65,89.86c-1.67,0-3.15-.35-4.44-1.03-1.29-.69-2.26-1.7-2.9-3.02-.64-1.33-.82-2.94-.53-4.85.19-1.03.52-2,1-2.91.48-.91,1.21-1.73,2.17-2.48.96-.74,2.24-1.38,3.83-1.91s3.58-.93,5.97-1.21c1.43-.16,2.79-.34,4.08-.56s2.35-.53,3.2-.96c.85-.42,1.34-1.03,1.47-1.83l.32-1.83c.4-2.35-.04-4.23-1.31-5.66-1.27-1.42-3.22-2.14-5.85-2.14-2.15,0-4.14.48-5.98,1.45-1.84.97-3.21,2.29-4.13,3.96l-1.11-.48c.69-1.27,1.61-2.37,2.75-3.3s2.45-1.64,3.9-2.15c1.45-.5,2.97-.76,4.56-.76s2.9.23,4.06.69c1.15.46,2.09,1.09,2.81,1.91s1.22,1.77,1.49,2.87c.27,1.1.29,2.3.07,3.6l-3.66,21.95h-1.27l1.03-6.2h-.16c-.85,1.38-1.87,2.58-3.05,3.61s-2.49,1.82-3.9,2.39-2.89.85-4.42.85ZM36.65,88.58c1.94,0,3.79-.52,5.58-1.56s3.31-2.49,4.57-4.36c1.27-1.86,2.1-4.03,2.5-6.49l.8-4.61c-.41.28-.9.52-1.46.74s-1.19.4-1.87.57c-.68.17-1.42.31-2.21.43s-1.62.23-2.5.34c-2.78.32-5.01.8-6.68,1.45-1.67.65-2.92,1.47-3.74,2.45-.82.98-1.35,2.12-1.59,3.42-.36,2.31.09,4.16,1.33,5.55,1.25,1.39,3,2.09,5.27,2.09Z"/><path d="M67.91,89.86c-1.67,0-3.15-.35-4.44-1.03-1.29-.69-2.26-1.7-2.9-3.02-.64-1.33-.82-2.94-.53-4.85.19-1.03.52-2,1-2.91.48-.91,1.21-1.73,2.17-2.48.96-.74,2.24-1.38,3.83-1.91s3.58-.93,5.97-1.21c1.43-.16,2.79-.34,4.08-.56s2.35-.53,3.2-.96c.85-.42,1.34-1.03,1.47-1.83l.32-1.83c.4-2.35-.04-4.23-1.31-5.66-1.27-1.42-3.22-2.14-5.85-2.14-2.15,0-4.14.48-5.98,1.45s-3.21,2.29-4.13,3.96l-1.11-.48c.69-1.27,1.61-2.37,2.75-3.3,1.15-.93,2.45-1.64,3.9-2.15,1.45-.5,2.97-.76,4.56-.76s2.9.23,4.06.69c1.15.46,2.09,1.09,2.81,1.91s1.22,1.77,1.49,2.87.29,2.3.07,3.6l-3.66,21.95h-1.27l1.03-6.2h-.16c-.85,1.38-1.87,2.58-3.05,3.61s-2.49,1.82-3.9,2.39-2.89.85-4.42.85ZM67.91,88.58c1.94,0,3.79-.52,5.58-1.56s3.31-2.49,4.57-4.36c1.27-1.86,2.1-4.03,2.5-6.49l.79-4.61c-.41.28-.9.52-1.46.74s-1.19.4-1.87.57-1.42.31-2.21.43c-.79.12-1.62.23-2.5.34-2.78.32-5.01.8-6.68,1.45-1.67.65-2.92,1.47-3.74,2.45-.82.98-1.35,2.12-1.59,3.42-.36,2.31.09,4.16,1.33,5.55,1.25,1.39,3,2.09,5.27,2.09Z"/><path d="M96.3,68.7l-3.42,20.52h-1.27l5.09-30.55h1.27l-.8,4.85h.16c.96-1.59,2.34-2.86,4.15-3.82,1.81-.95,3.77-1.43,5.88-1.43s3.77.44,5.19,1.33c1.42.89,2.44,2.11,3.06,3.68.62,1.56.76,3.37.42,5.41l-3.42,20.52h-1.27l3.42-20.52c.44-2.71-.02-4.91-1.38-6.6-1.36-1.7-3.39-2.55-6.1-2.55-1.8,0-3.48.39-5.04,1.17s-2.86,1.86-3.92,3.24c-1.05,1.38-1.73,2.96-2.02,4.73Z"/><path d="M130.9,89.22l-3.98-30.55h1.27l3.74,28.8h.16l13.36-28.8h1.27l3.82,28.8h.16l13.28-28.8h1.43l-14.16,30.55h-1.75l-3.74-28.08h-.16l-12.97,28.08h-1.75Z"/><path d="M177.11,89.86c-1.67,0-3.15-.35-4.44-1.03-1.29-.69-2.26-1.7-2.9-3.02-.64-1.33-.82-2.94-.53-4.85.19-1.03.52-2,1-2.91.48-.91,1.21-1.73,2.17-2.48.96-.74,2.24-1.38,3.83-1.91s3.58-.93,5.97-1.21c1.43-.16,2.79-.34,4.08-.56s2.35-.53,3.2-.96c.85-.42,1.34-1.03,1.47-1.83l.32-1.83c.4-2.35-.04-4.23-1.31-5.66-1.27-1.42-3.22-2.14-5.85-2.14-2.15,0-4.14.48-5.98,1.45s-3.21,2.29-4.13,3.96l-1.11-.48c.69-1.27,1.61-2.37,2.75-3.3,1.15-.93,2.45-1.64,3.9-2.15,1.45-.5,2.97-.76,4.56-.76s2.9.23,4.06.69c1.15.46,2.09,1.09,2.81,1.91s1.22,1.77,1.49,2.87.29,2.3.07,3.6l-3.66,21.95h-1.27l1.03-6.2h-.16c-.85,1.38-1.87,2.58-3.05,3.61s-2.49,1.82-3.9,2.39-2.89.85-4.42.85ZM177.11,88.58c1.94,0,3.79-.52,5.58-1.56s3.31-2.49,4.57-4.36c1.27-1.86,2.1-4.03,2.5-6.49l.79-4.61c-.41.28-.9.52-1.46.74s-1.19.4-1.87.57-1.42.31-2.21.43c-.79.12-1.62.23-2.5.34-2.78.32-5.01.8-6.68,1.45-1.67.65-2.92,1.47-3.74,2.45-.82.98-1.35,2.12-1.59,3.42-.36,2.31.09,4.16,1.33,5.55,1.25,1.39,3,2.09,5.27,2.09Z"/><path d="M208.37,89.86c-1.67,0-3.15-.35-4.44-1.03-1.29-.69-2.26-1.7-2.9-3.02-.64-1.33-.82-2.94-.53-4.85.19-1.03.52-2,1-2.91.48-.91,1.21-1.73,2.17-2.48.96-.74,2.24-1.38,3.83-1.91s3.58-.93,5.97-1.21c1.43-.16,2.79-.34,4.08-.56s2.35-.53,3.2-.96c.85-.42,1.34-1.03,1.47-1.83l.32-1.83c.4-2.35-.04-4.23-1.31-5.66-1.27-1.42-3.22-2.14-5.85-2.14-2.15,0-4.14.48-5.98,1.45-1.84.97-3.21,2.29-4.13,3.96l-1.11-.48c.69-1.27,1.61-2.37,2.75-3.3s2.45-1.64,3.9-2.15c1.45-.5,2.97-.76,4.56-.76s2.9.23,4.06.69c1.15.46,2.09,1.09,2.81,1.91s1.22,1.77,1.49,2.87c.27,1.1.29,2.3.07,3.6l-3.66,21.95h-1.27l1.03-6.2h-.16c-.85,1.38-1.87,2.58-3.05,3.61s-2.49,1.82-3.9,2.39-2.89.85-4.42.85ZM208.37,88.58c1.94,0,3.79-.52,5.58-1.56s3.31-2.49,4.57-4.36c1.27-1.86,2.1-4.03,2.5-6.49l.8-4.61c-.41.28-.9.52-1.46.74s-1.19.4-1.87.57c-.68.17-1.42.31-2.21.43s-1.62.23-2.5.34c-2.78.32-5.01.8-6.68,1.45-1.67.65-2.92,1.47-3.74,2.45-.82.98-1.35,2.12-1.59,3.42-.36,2.31.09,4.16,1.33,5.55,1.25,1.39,3,2.09,5.27,2.09Z"/><path d="M232.23,89.22l5.09-30.55h1.27l-5.09,30.55h-1.27Z"/><path d="M256.81,89.86c-2.68,0-4.9-.7-6.66-2.09-1.76-1.39-3-3.28-3.7-5.67-.7-2.39-.8-5.08-.3-8.07.5-3,1.5-5.69,3-8.07,1.5-2.39,3.31-4.28,5.45-5.67,2.13-1.39,4.41-2.09,6.82-2.09,1.78,0,3.36.38,4.74,1.14,1.38.76,2.53,1.81,3.44,3.14.91,1.33,1.53,2.87,1.88,4.61.34,1.74.36,3.6.04,5.58l-.24,1.27h-24.5l.24-1.27h23.23c.4-2.44.28-4.66-.37-6.65-.64-2-1.7-3.59-3.16-4.77s-3.23-1.78-5.3-1.78-4.11.62-6.05,1.87-3.61,2.94-5.01,5.09c-1.41,2.15-2.36,4.57-2.86,7.28l-.08.08c-.45,2.68-.4,5.14.14,7.38.54,2.24,1.59,4.04,3.14,5.39,1.55,1.35,3.61,2.03,6.18,2.03,1.86,0,3.49-.33,4.9-.99,1.41-.66,2.59-1.42,3.54-2.29.95-.86,1.66-1.6,2.14-2.21l.88.72c-.56.77-1.36,1.62-2.41,2.57-1.05.94-2.33,1.76-3.86,2.45-1.52.69-3.28,1.03-5.27,1.03Z"/><path d="M283.38,68.7l-3.42,20.52h-1.27l5.09-30.55h1.27l-.79,4.85h.16c.95-1.59,2.34-2.86,4.15-3.82,1.81-.95,3.77-1.43,5.88-1.43s3.77.44,5.19,1.33c1.42.89,2.44,2.11,3.06,3.68s.76,3.37.42,5.41l-3.42,20.52h-1.27l3.42-20.52c.44-2.71-.02-4.91-1.38-6.6s-3.39-2.55-6.09-2.55c-1.8,0-3.48.39-5.04,1.17-1.56.78-2.86,1.86-3.92,3.24s-1.73,2.96-2.02,4.73Z"/></g></svg></a>
 </nav>
@@ -439,7 +440,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
     <h1>Schier<br>in Stijl.</h1>
     <div class="hero-foot">
       <p>Aan de rand van het dorp, waar de horizon eindeloos is en de eilandrust meteen voelbaar wordt, ligt Aanwaaien — een van de weinige moderne designhuizen op het eiland.</p>
-      <a class="knop" href="#beschikbaarheid" style="margin-top:0">Boek een verblijf <span class="arrow">→</span></a>
+      <a class="knop" href="#boeken" style="margin-top:0">Boek een verblijf <span class="arrow">→</span></a>
     </div>
   </div>
   <div class="scroll-cue" aria-hidden="true"></div>
@@ -495,7 +496,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
       <article class="accommodatie-card rv" id="prijzen">
         <h3>Prijzen</h3>
         <p>Aanwaaien kan geboekt worden voor een week, een midweek, of een weekend. Prijzen variëren van €175 per nacht in het laagseizoen tot €350 per nacht in het hoogseizoen. Stuur ons een bericht of bel ons met je gewenste data, en we maken graag een passende offerte.</p>
-        <a class="prijzen-link" href="#beschikbaarheid">Bekijk beschikbaarheid <span aria-hidden="true">↓</span></a>
+        <a class="prijzen-link" href="#boeken">Bekijk beschikbaarheid <span aria-hidden="true">↓</span></a>
       </article>
       <article class="accommodatie-card rv" id="over-het-huis">
         <h3>Over het huis</h3>
@@ -522,14 +523,19 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   </div>
 </section>
 
-<section class="beschikbaarheid" id="beschikbaarheid" aria-labelledby="beschikbaarheid-titel">
+<section class="beschikbaarheid" id="boeken" aria-labelledby="beschikbaarheid-titel">
   <div class="wrap">
     <div class="beschikbaarheid-kop rv">
       <div>
         <p class="eyebrow"><span class="streep"></span>Beschikbaarheid</p>
         <h2 id="beschikbaarheid-titel">Kies een moment<br>om aan te waaien.</h2>
       </div>
-      <p class="lead">Selecteer een vrije aankomst- en vertrekdag. Maandag en vrijdag zijn onze vaste wisseldagen; daarna vraag je de gekozen periode eenvoudig per e-mail aan.</p>
+      <div class="lead">
+        <p>Hieronder zie je wanneer Aanwaaien nog beschikbaar is. De groene dagen zijn vrij, de rode dagen zijn al geboekt.</p>
+        <p>Maandag en vrijdag zijn onze wisseldagen. Je kunt Aanwaaien boeken voor een weekend (vr–ma), een midweek (ma–vr) of een hele week (ma–ma / vr–vr). Wil je wat langer blijven? Dat kan vaak ook, in overleg.</p>
+        <p>Heb je een mooie periode gevonden? Stuur ons dan even een mail met de gewenste data. We laten je binnen 12 uur weten of Aanwaaien beschikbaar is.</p>
+        <p>Hopelijk tot snel op Schiermonnikoog.</p>
+      </div>
     </div>
 
     <div class="availability-shell rv" id="availability-calendar">
@@ -691,7 +697,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   </div>
 </section>
 
-<section class="boeken" id="boeken">
+<section class="boeken" id="contact">
   <div class="wrap rv">
     <svg class="boek-merk" viewBox="349 5.5 68 88" aria-hidden="true"><g fill="none" stroke="var(--riet)" stroke-width="2.4" stroke-linecap="round"><path d="M352.07,89.86c-.55-23.34-.12-81,35.51-81"/><path d="M367.07,89.86c0-27.49,9.78-66,36-66"/><path d="M380.57,89.86c0-23.34,7.01-46.69,33-46.69"/></g></svg>
     <h2>Kom aanwaaien.</h2>
