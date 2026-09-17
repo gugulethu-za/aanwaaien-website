@@ -177,10 +177,10 @@ if (root) {
       return;
     }
 
-    const bookingUrl = new URL("https://aanwaaien-bookingsformulier.gugulethu-825.workers.dev");
+    const bookingUrl = new URL("/boeken", window.location.origin);
     bookingUrl.searchParams.set("arrival", arrival);
     bookingUrl.searchParams.set("departure", departure);
-    window.location.assign(bookingUrl.toString());
+    window.location.assign(bookingUrl.pathname + bookingUrl.search);
   });
 
   previous.addEventListener("click", () => {
