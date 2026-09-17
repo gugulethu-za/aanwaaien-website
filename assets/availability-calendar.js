@@ -1,5 +1,5 @@
 import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
-import { buildRequestMailto } from "./request-email.js";
+
 
 const root = document.querySelector("#availability-calendar");
 
@@ -177,17 +177,10 @@ if (root) {
       return;
     }
 
-    const mailto = buildRequestMailto({
-      arrival,
-      departure,
-      pretty,
-    });
-    const emailLink = document.createElement("a");
-    emailLink.href = mailto;
-    emailLink.hidden = true;
-    document.body.append(emailLink);
-    emailLink.click();
-    emailLink.remove();
+    const bookingUrl = new URL("https://aanwaaien-bookingsformulier.gugulethu-825.workers.dev");
+    bookingUrl.searchParams.set("arrival", arrival);
+    bookingUrl.searchParams.set("departure", departure);
+    window.location.assign(bookingUrl.toString());
   });
 
   previous.addEventListener("click", () => {
