@@ -47,6 +47,8 @@ if (root) {
     const description =
       status === "unavailable"
         ? "bezet"
+        : status === "checkout_available"
+          ? "vertrek in de ochtend, aankomst mogelijk in de middag"
         : status === "turnover"
           ? "alleen beschikbaar als vertrekdag"
           : changeover
@@ -100,7 +102,7 @@ if (root) {
         } else {
           button.setAttribute("aria-label", dayLabel(date, status, changeover));
           if (status === "unavailable") button.classList.add("is-unavailable");
-          if (status === "turnover") button.classList.add("is-turnover");
+          if (status === "turnover" || status === "checkout_available") button.classList.add("is-turnover");
           if (!changeover) button.classList.add("is-non-changeover");
 
           const validArrival = !arrival && isValidArrival(availability, date);
@@ -206,7 +208,7 @@ if (root) {
       if (
         !item ||
         typeof item.date !== "string" ||
-        !["available", "unavailable", "turnover"].includes(item.status)
+        !["available", "unavailable", "turnover", "checkout_available"].includes(item.status)
       ) {
         throw new Error("Invalid availability response");
       }

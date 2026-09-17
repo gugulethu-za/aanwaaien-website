@@ -4,16 +4,17 @@ export function isChangeover(date) {
 }
 
 export function isValidArrival(availability, date) {
-  return isChangeover(date) && availability.get(date) === "available";
+  return isChangeover(date) && ["available", "checkout_available"].includes(availability.get(date));
 }
 
 export function canStay(availability, start, end) {
   if (!start || !end || end <= start || !isChangeover(start) || !isChangeover(end)) {
     return false;
   }
-  if (availability.get(start) !== "available") return false;
+  if (!isValidArrival(availability, start)) return false;
 
   for (let date = start; date < end; date = addDays(date, 1)) {
+    if (date === start && availability.get(date) === "checkout_available") continue;
     if (availability.get(date) !== "available") return false;
   }
 

@@ -82,11 +82,24 @@ export function parseAvailability(html, today = amsterdamToday()) {
   }
 
   const dates = [];
+  function hasAvailableNightsAfterCheckout(date) {
+    const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
+    if (weekday !== 1 && weekday !== 5) return false;
+    // Require explicit permission to arrive, not just an inferred gap.
+    if (!occupied.has(date) || !arrivals.has(date) || !occupied.has(addDays(date, -1))) return false;
+    const nextChangeover = addDays(date, weekday === 5 ? 3 : 4);
+    if (nextChangeover > maxDate) return false;
+    for (let night = addDays(date, 1); night < nextChangeover; night = addDays(night, 1)) {
+      if (occupied.has(night)) return false;
+    }
+    return true;
+  }
   for (let date = today; date <= maxDate; date = addDays(date, 1)) {
     let status = "available";
-    // The source gives an overlapping occupied/arrival date the selectable
-    // `arrival` class. Only that overlap is a shared checkout/check-in day.
-    if (occupied.has(date) && arrivals.has(date)) status = "turnover";
+    // An occupied/arrival overlap can permit a new afternoon arrival.
+    // Keep other overlaps departure-only unless the following nights are clear.
+    if (hasAvailableNightsAfterCheckout(date)) status = "checkout_available";
+    else if (occupied.has(date) && arrivals.has(date)) status = "turnover";
     else if (occupied.has(date)) status = "unavailable";
     dates.push({ date, status });
   }
