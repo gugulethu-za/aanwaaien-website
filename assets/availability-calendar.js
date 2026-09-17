@@ -2,6 +2,8 @@ import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
 
 
 const root = document.querySelector("#availability-calendar");
+// TEMPORARY calendar diagnostics: remove after investigating clickability.
+console.log("[calendar-debug] loaded v1", { calendarFound: Boolean(root) });
 
 if (root) {
   const content = root.querySelector("[data-calendar-content]");
@@ -42,6 +44,57 @@ if (root) {
     date.setUTCMonth(date.getUTCMonth() + count);
     return monthKey(date);
   };
+
+  // Log a serialized snapshot so later clicks cannot change the console values.
+  function logSelection(stage, date, extra = {}) {
+    const validArrival = isValidArrival(availability, date);
+    const validStay = canStay(availability, arrival, date);
+    let firstBlockedNight = null;
+    if (arrival && date > arrival) {
+      for (const night = dateObject(arrival); iso(night) < date; night.setUTCDate(night.getUTCDate() + 1)) {
+        const key = iso(night);
+        const status = availability.get(key);
+        if (status !== "available" && !(key === arrival && status === "checkout_available")) {
+          firstBlockedNight = { date: key, status: status ?? "missing" };
+          break;
+        }
+      }
+    }
+    console.log(`[calendar-debug] ${stage}`, JSON.stringify({
+      date,
+      weekday: dateObject(date).getUTCDay(),
+      status: availability.get(date) ?? "missing",
+      changeover: isChangeover(date),
+      arrival,
+      departure,
+      arrivalStatus: availability.get(arrival) ?? "missing",
+      isValidArrival: validArrival,
+      canStay: validStay,
+      validArrival: !arrival && validArrival,
+      validDeparture: Boolean(!departure && arrival && date > arrival && isChangeover(date) && validStay),
+      startsNewArrival: Boolean(departure && validArrival),
+      cancelsArrival: Boolean(arrival && !departure && date === arrival),
+      firstBlockedNight,
+      ...extra,
+    }));
+  }
+
+  // Disabled buttons do not fire click handlers. Observe pointer attempts too,
+  // without enabling the button or changing booking behavior.
+  document.addEventListener("pointerdown", (event) => {
+    const button = [...monthsNode.querySelectorAll("button[data-date]")].find((candidate) => {
+      const rect = candidate.getBoundingClientRect();
+      return event.clientX >= rect.left && event.clientX <= rect.right &&
+        event.clientY >= rect.top && event.clientY <= rect.bottom;
+    });
+    if (button) logSelection("pointerdown", button.dataset.date, {
+      disabled: button.disabled,
+      classes: button.className,
+      targetTag: event.target?.tagName,
+      targetClasses: event.target instanceof Element ? event.target.getAttribute("class") : null,
+      targetIsButton: event.target === button || button.contains(event.target),
+    });
+  }, true);
 
   function dayLabel(date, status, changeover) {
     const description =
@@ -95,14 +148,21 @@ if (root) {
         button.textContent = day;
         button.dataset.date = date;
 
+        // Fixed weekly changeover markers, independent of booking availability.
+        if (changeover) button.classList.add("is-changeover");
+        if (dateObject(date).getUTCDay() === 5) button.classList.add("is-friday");
+
         if (!status) {
           button.classList.add("is-outside");
           button.disabled = true;
-          button.setAttribute("aria-hidden", "true");
+          if (changeover) {
+            button.setAttribute("aria-label", `${pretty(date)}, wisseldag, beschikbaarheid onbekend`);
+          } else {
+            button.setAttribute("aria-hidden", "true");
+          }
         } else {
           button.setAttribute("aria-label", dayLabel(date, status, changeover));
           if (status === "unavailable") button.classList.add("is-unavailable");
-          if (status === "turnover" || status === "checkout_available") button.classList.add("is-turnover");
           if (!changeover) button.classList.add("is-non-changeover");
 
           const validArrival = !arrival && isValidArrival(availability, date);
@@ -126,6 +186,7 @@ if (root) {
           }
           button.addEventListener("click", () => selectDate(date));
         }
+        if (changeover) logSelection("render", date, { disabled: button.disabled });
         grid.append(button);
       }
       section.append(grid);
@@ -138,7 +199,9 @@ if (root) {
   }
 
   function selectDate(date) {
+    logSelection("click-handler entered", date);
     if (arrival && !departure && date === arrival) {
+      console.log("[calendar-debug] decision", date, "cancel arrival");
       resetSelection();
       render();
       return;
@@ -149,13 +212,18 @@ if (root) {
       departure = null;
     }
 
+    logSelection("click-handler checks (after any selection reset)", date);
     if (!arrival && isValidArrival(availability, date)) {
+      console.log("[calendar-debug] decision", date, "accept arrival");
       arrival = date;
       selectionNode.textContent = `Aankomst: ${pretty(date)}. Kies een vertrekdag.`;
     } else if (canStay(availability, arrival, date)) {
+      console.log("[calendar-debug] decision", date, "accept departure");
       departure = date;
       const line = `${pretty(arrival)} t/m ${pretty(departure)}`;
       selectionNode.textContent = line;
+    } else {
+      console.log("[calendar-debug] decision", date, "reject selection");
     }
     render();
   }

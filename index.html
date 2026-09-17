@@ -372,18 +372,25 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   color:rgba(34,36,31,.58);background:rgba(183,108,98,.4);
   border-color:transparent;text-decoration:line-through;
 }
-.availability-day.is-turnover{
+.availability-day.is-changeover{
   background:linear-gradient(90deg,rgba(183,108,98,.4) 50%,rgba(122,135,96,.28) 50%);
   text-decoration:none;
 }
 .availability-day.is-selected,.availability-day.is-in-range{
   color:var(--berk);background:var(--riet);border-color:var(--riet);text-decoration:none;
 }
-.availability-day.is-turnover.is-selected,.availability-day.is-turnover.is-in-range{
+.availability-day.is-changeover.is-selected,.availability-day.is-changeover.is-in-range{
   color:var(--inkt);
   background:linear-gradient(90deg,rgba(183,108,98,.4) 50%,var(--riet-licht) 50%);
 }
-.availability-day.is-outside{visibility:hidden}
+.availability-day.is-changeover.is-friday{
+  background:linear-gradient(90deg,rgba(122,135,96,.28) 50%,rgba(183,108,98,.4) 50%);
+}
+.availability-day.is-changeover.is-friday.is-selected,
+.availability-day.is-changeover.is-friday.is-in-range{
+  background:linear-gradient(90deg,var(--riet-licht) 50%,rgba(183,108,98,.4) 50%);
+}
+.availability-day.is-outside:not(.is-changeover){visibility:hidden}
 .availability-meta{
   display:flex;justify-content:space-between;align-items:flex-end;gap:28px;
   margin-top:clamp(30px,5vw,54px);padding-top:24px;
