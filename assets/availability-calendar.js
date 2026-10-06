@@ -1,3 +1,4 @@
+import { buildRequestMailto } from "./request-email.js";
 import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
 
 
@@ -10,6 +11,10 @@ if (root) {
   const monthsNode = root.querySelector("[data-calendar-months]");
   const selectionNode = root.querySelector("[data-calendar-selection]");
   const mail = root.querySelector("[data-calendar-mail]");
+  const email = root.querySelector("[data-calendar-email]");
+  // The visible address is the single source for both mailto links.
+  const recipient = email.textContent.trim();
+  email.href = `mailto:${recipient}`;
   const previous = root.querySelector("[data-calendar-previous]");
   const next = root.querySelector("[data-calendar-next]");
   const clear = root.querySelector("[data-calendar-clear]");
@@ -320,10 +325,12 @@ if (root) {
       return;
     }
 
-    const bookingUrl = new URL("/boeken", window.location.origin);
-    bookingUrl.searchParams.set("arrival", arrival);
-    bookingUrl.searchParams.set("departure", departure);
-    window.location.assign(bookingUrl.pathname + bookingUrl.search);
+    const link = document.createElement("a");
+    link.href = buildRequestMailto({ arrival, departure, pretty, recipient });
+    link.hidden = true;
+    document.body.append(link);
+    link.click();
+    link.remove();
   });
 
   previous.addEventListener("click", () => {

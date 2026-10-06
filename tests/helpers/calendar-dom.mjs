@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const page=await readFile(new URL('../../index.html',import.meta.url),'utf8');
+const recipient=page.match(/data-calendar-email[^>]*>([^<]*)</)[1];
 let counter = 0;
 class Element {
- constructor(){this.children=[];this.attributes={};this.dataset={};this.listeners={};this.className='';}
+ constructor(tag='div'){this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this.listeners={};this.className='';}
  get classList(){return {
   contains:name=>this.className.split(' ').includes(name),
   add:(...names)=>{for(const name of names)if(!this.className.split(' ').includes(name))this.className+=` ${name}`;},
@@ -15,7 +18,8 @@ class Element {
  removeAttribute(name){delete this.attributes[name];}
  addEventListener(name,listener){this.listeners[name]=listener;}
  emit(name,event={}){this.listeners[name]?.(event);}
- click(){if(!this.disabled){this.focus();this.emit('click');}}
+ click(){if(this.tagName==='a'){document.mailtoClicks.push({href:this.href,hidden:this.hidden,connected:this.parentElement===document.body});this.emit('click');return;}if(!this.disabled){this.focus();this.emit('click');}}
+ remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(child=>child!==this);this.parentElement=null;}
  focus(){if(document.activeElement===this)return;document.activeElement?.emit('blur');document.activeElement=this;this.emit('focus');}
  querySelectorAll(selector){
   const nodes=[];
@@ -26,11 +30,12 @@ class Element {
 }
 export async function calendar(dates,{mobile=false,hover=true}={}){
  const originals={document:globalThis.document,window:globalThis.window,fetch:globalThis.fetch};
- const controls=new Map(['content','loading','error','months','selection','mail','previous','next','clear'].map(name=>[name,new Element()]));
+ const controls=new Map(['content','loading','error','months','selection','mail','previous','next','clear','email'].map(name=>[name,new Element()]));
+ controls.get('email').textContent=recipient;
  const root=new Element();root.querySelector=selector=>controls.get(selector.match(/data-calendar-([^\]]+)/)?.[1]);
  const media={matches:mobile,addEventListener(name,listener){this.listener=listener;}};
  const hoverMedia={matches:hover};let bookingUrl;
- globalThis.document={querySelector:()=>root,createElement:()=>new Element(),activeElement:null};
+ globalThis.document={querySelector:()=>root,createElement:tag=>new Element(tag),activeElement:null,body:new Element('body'),mailtoClicks:[]};
  globalThis.window={matchMedia:query=>query==='(hover: hover)'?hoverMedia:media,location:{origin:'http://localhost',assign:url=>{bookingUrl=url;}}};
  globalThis.fetch=async url=>{assert.equal(url,'/api/availability');return {ok:true,json:async()=>({dates})};};
  await import(`../../assets/availability-calendar.js?test=${++counter}`);
@@ -40,6 +45,9 @@ export async function calendar(dates,{mobile=false,hover=true}={}){
   note:date=>months.children.flatMap(month=>month.children[0].children).find(cell=>cell.children[0]?.dataset.date===date)?.children.find(child=>child.className==='availability-note')?.textContent,
   summary:()=>controls.get('selection').textContent,
   bookingUrl:()=>bookingUrl,
+  mailtoClicks:()=>document.mailtoClicks,
+  body:document.body,
+  recipient,
   clear:()=>controls.get('clear').click(),
   restore:()=>Object.assign(globalThis,originals)
  };
