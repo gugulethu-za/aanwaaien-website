@@ -2,8 +2,6 @@ import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
 
 
 const root = document.querySelector("#availability-calendar");
-// TEMPORARY calendar diagnostics: remove after investigating clickability.
-console.log("[calendar-debug] loaded v1", { calendarFound: Boolean(root) });
 
 if (root) {
   const content = root.querySelector("[data-calendar-content]");
@@ -14,6 +12,8 @@ if (root) {
   const mail = root.querySelector("[data-calendar-mail]");
   const previous = root.querySelector("[data-calendar-previous]");
   const next = root.querySelector("[data-calendar-next]");
+  const clear = root.querySelector("[data-calendar-clear]");
+  const mobile = window.matchMedia("(max-width: 760px)");
   const weekdays = ["ma", "di", "wo", "do", "vr", "za", "zo"];
   const monthFormatter = new Intl.DateTimeFormat("nl-NL", {
     month: "long",
@@ -33,6 +33,9 @@ if (root) {
   let visibleMonth;
   let arrival = null;
   let departure = null;
+  let previewDeparture = null;
+  let previewSource = null;
+  let inputType = "keyboard";
   let availabilityLoaded = false;
 
   const dateObject = (value) => new Date(`${value}T00:00:00Z`);
@@ -44,57 +47,6 @@ if (root) {
     date.setUTCMonth(date.getUTCMonth() + count);
     return monthKey(date);
   };
-
-  // Log a serialized snapshot so later clicks cannot change the console values.
-  function logSelection(stage, date, extra = {}) {
-    const validArrival = isValidArrival(availability, date);
-    const validStay = canStay(availability, arrival, date);
-    let firstBlockedNight = null;
-    if (arrival && date > arrival) {
-      for (const night = dateObject(arrival); iso(night) < date; night.setUTCDate(night.getUTCDate() + 1)) {
-        const key = iso(night);
-        const status = availability.get(key);
-        if (status !== "available" && !(key === arrival && status === "checkout_available")) {
-          firstBlockedNight = { date: key, status: status ?? "missing" };
-          break;
-        }
-      }
-    }
-    console.log(`[calendar-debug] ${stage}`, JSON.stringify({
-      date,
-      weekday: dateObject(date).getUTCDay(),
-      status: availability.get(date) ?? "missing",
-      changeover: isChangeover(date),
-      arrival,
-      departure,
-      arrivalStatus: availability.get(arrival) ?? "missing",
-      isValidArrival: validArrival,
-      canStay: validStay,
-      validArrival: !arrival && validArrival,
-      validDeparture: Boolean(!departure && arrival && date > arrival && isChangeover(date) && validStay),
-      startsNewArrival: Boolean(departure && validArrival),
-      cancelsArrival: Boolean(arrival && !departure && date === arrival),
-      firstBlockedNight,
-      ...extra,
-    }));
-  }
-
-  // Disabled buttons do not fire click handlers. Observe pointer attempts too,
-  // without enabling the button or changing booking behavior.
-  document.addEventListener("pointerdown", (event) => {
-    const button = [...monthsNode.querySelectorAll("button[data-date]")].find((candidate) => {
-      const rect = candidate.getBoundingClientRect();
-      return event.clientX >= rect.left && event.clientX <= rect.right &&
-        event.clientY >= rect.top && event.clientY <= rect.bottom;
-    });
-    if (button) logSelection("pointerdown", button.dataset.date, {
-      disabled: button.disabled,
-      classes: button.className,
-      targetTag: event.target?.tagName,
-      targetClasses: event.target instanceof Element ? event.target.getAttribute("class") : null,
-      targetIsButton: event.target === button || button.contains(event.target),
-    });
-  }, true);
 
   function dayLabel(date, status, changeover) {
     const description =
@@ -111,9 +63,14 @@ if (root) {
   }
 
   function render() {
+    previewDeparture = null;
+    previewSource = null;
+    const focusedDate = document.activeElement?.dataset?.date;
     monthsNode.replaceChildren();
+    const localToday = new Date();
+    const today = `${localToday.getFullYear()}-${String(localToday.getMonth() + 1).padStart(2, "0")}-${String(localToday.getDate()).padStart(2, "0")}`;
 
-    for (let offset = 0; offset < 2; offset += 1) {
+    for (let offset = 0; offset < (mobile.matches ? 1 : 2); offset += 1) {
       const key = addMonths(visibleMonth, offset);
       const start = new Date(`${key}-01T00:00:00Z`);
       const section = document.createElement("section");
@@ -145,11 +102,32 @@ if (root) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "availability-day";
-        button.textContent = day;
+        const cell = document.createElement("div");
+        cell.className = "availability-cell";
+        const number = document.createElement("span");
+        number.textContent = day;
+        button.append(number);
+        const note = status === "unavailable" ? "Bezet" :
+          ["turnover", "checkout_available"].includes(status) ? "Vertrekdag, aankomst mogelijk vanaf de middag" :
+          status === "available" && changeover ? "Beschikbaar" : null;
+        if (note) {
+          const tooltip = document.createElement("span");
+          tooltip.className = "availability-note";
+          tooltip.id = `calendar-note-${date}`;
+          tooltip.textContent = note;
+          button.setAttribute("aria-describedby", tooltip.id);
+          cell.append(tooltip);
+        }
+        if (date === today) {
+          button.classList.add("is-today");
+          button.setAttribute("aria-current", "date");
+        }
         button.dataset.date = date;
 
-        // Fixed weekly changeover markers, independent of booking availability.
-        if (changeover) button.classList.add("is-changeover");
+        // Split markers describe real turnover availability, not the weekday booking rule.
+        if (changeover && ["turnover", "checkout_available"].includes(status)) {
+          button.classList.add("is-changeover");
+        }
         if (dateObject(date).getUTCDay() === 5) button.classList.add("is-friday");
 
         if (!status) {
@@ -174,34 +152,91 @@ if (root) {
             canStay(availability, arrival, date);
           const startsNewArrival = departure && isValidArrival(availability, date);
           const cancelsArrival = arrival && !departure && date === arrival;
-          button.disabled = !(
+          const selectable = Boolean(
             validArrival ||
             validDeparture ||
             startsNewArrival ||
             cancelsArrival
           );
-          if (date === arrival || date === departure) button.classList.add("is-selected");
-          if (arrival && departure && date >= arrival && date <= departure) {
-            button.classList.add("is-in-range");
-          }
-          button.addEventListener("click", () => selectDate(date));
+          button.setAttribute("aria-disabled", String(!selectable));
+          button.addEventListener("click", () => {
+            if (button.getAttribute("aria-disabled") !== "true") selectDate(date);
+          });
         }
-        if (changeover) logSelection("render", date, { disabled: button.disabled });
-        grid.append(button);
+        button.addEventListener("pointerenter", (event) => {
+          if (event.pointerType === "mouse" && window.matchMedia("(hover: hover)").matches) {
+            updatePreview(date, "pointer");
+          }
+        });
+        button.addEventListener("pointerleave", () => {
+          if (previewSource === "pointer") updatePreview(null, null);
+        });
+        button.addEventListener("focus", () => {
+          if (inputType !== "touch") updatePreview(date, "focus");
+        });
+        button.addEventListener("blur", () => {
+          if (previewSource === "focus") updatePreview(null, null);
+        });
+        cell.prepend(button);
+        grid.append(cell);
       }
       section.append(grid);
       monthsNode.append(section);
     }
 
     previous.disabled = visibleMonth <= firstMonth;
-    next.disabled = addMonths(visibleMonth, 1) >= lastMonth;
+    next.disabled = addMonths(visibleMonth, mobile.matches ? 0 : 1) >= lastMonth;
+    paintSelection();
     updateRequestButton();
+    if (focusedDate) monthsNode.querySelector(`[data-date="${focusedDate}"]`)?.focus();
   }
 
+  function updatePreview(date, source) {
+    const valid = !departure && arrival && date && date > arrival &&
+      isChangeover(date) && canStay(availability, arrival, date);
+    previewDeparture = valid ? date : null;
+    previewSource = valid ? source : null;
+    paintSelection();
+  }
+
+  // Preview updates existing date cells in place: no DOM replacement or focus loss.
+  function paintSelection() {
+    const end = departure || previewDeparture;
+    for (const button of monthsNode.querySelectorAll("button[data-date]")) {
+      const date = button.dataset.date;
+      const selected = date === arrival || date === departure;
+      const inRange = Boolean(arrival && end && date >= arrival && date <= end &&
+        !button.classList.contains("is-unavailable"));
+      const day = dateObject(date);
+      const followingDay = new Date(day);
+      followingDay.setUTCDate(day.getUTCDate() + 1);
+      const cell = button.parentElement;
+      cell.classList.toggle("is-range", inRange);
+      cell.classList.toggle("is-range-start", inRange && date === arrival);
+      cell.classList.toggle("is-range-end", inRange && date === end);
+      cell.classList.toggle("is-range-left", inRange &&
+        (date === arrival || day.getUTCDay() === 1 || day.getUTCDate() === 1));
+      cell.classList.toggle("is-range-right", inRange &&
+        (date === end || day.getUTCDay() === 0 || followingDay.getUTCDate() === 1));
+      button.classList.toggle("is-selected", selected);
+      button.classList.toggle("is-stay-interior", Boolean(arrival && end && date > arrival && date < end));
+      button.classList.toggle("is-preview-end", Boolean(!departure && date === previewDeparture));
+      if (selected) button.setAttribute("aria-pressed", "true");
+      else button.removeAttribute("aria-pressed");
+    }
+    updateSummary();
+  }
+
+  root.addEventListener("keydown", () => { inputType = "keyboard"; });
+  monthsNode.addEventListener("pointerdown", (event) => {
+    inputType = event.pointerType === "touch" || event.pointerType === "pen" ? "touch" : "mouse";
+  });
+  monthsNode.addEventListener("pointerleave", () => {
+    if (previewSource === "pointer") updatePreview(null, null);
+  });
+
   function selectDate(date) {
-    logSelection("click-handler entered", date);
     if (arrival && !departure && date === arrival) {
-      console.log("[calendar-debug] decision", date, "cancel arrival");
       resetSelection();
       render();
       return;
@@ -212,25 +247,63 @@ if (root) {
       departure = null;
     }
 
-    logSelection("click-handler checks (after any selection reset)", date);
     if (!arrival && isValidArrival(availability, date)) {
-      console.log("[calendar-debug] decision", date, "accept arrival");
       arrival = date;
-      selectionNode.textContent = `Aankomst: ${pretty(date)}. Kies een vertrekdag.`;
     } else if (canStay(availability, arrival, date)) {
-      console.log("[calendar-debug] decision", date, "accept departure");
       departure = date;
-      const line = `${pretty(arrival)} t/m ${pretty(departure)}`;
-      selectionNode.textContent = line;
-    } else {
-      console.log("[calendar-debug] decision", date, "reject selection");
     }
     render();
   }
 
+  function updateSummary() {
+    const end = departure || previewDeparture;
+    const nights = end ? Math.round((dateObject(end) - dateObject(arrival)) / 86400000) : 0;
+    selectionNode.textContent = arrival
+      ? `Aankomst: ${pretty(arrival)} \u00b7 Vertrek: ${end ? pretty(end) : "Kies een vertrekdag"}${end ? ` \u00b7 ${nights} ${nights === 1 ? "nacht" : "nachten"}` : ""}`
+      : "Selecteer een beschikbare aankomstdag";
+    clear.disabled = !arrival;
+  }
+
+  clear.addEventListener("click", () => { resetSelection(); render(); });
+  mobile.addEventListener("change", () => {
+    if (!availabilityLoaded) return;
+    if (!mobile.matches && visibleMonth === lastMonth && firstMonth !== lastMonth) visibleMonth = addMonths(visibleMonth, -1);
+    render();
+  });
+  let touchStart;
+  monthsNode.addEventListener("touchstart", (event) => {
+    touchStart = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY };
+  }, { passive: true });
+  monthsNode.addEventListener("touchend", (event) => {
+    if (!touchStart || !mobile.matches) return;
+    const dx = event.changedTouches[0].clientX - touchStart.x;
+    const dy = event.changedTouches[0].clientY - touchStart.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) (dx < 0 ? next : previous).click();
+    touchStart = null;
+  }, { passive: true });
+  monthsNode.addEventListener("keydown", (event) => {
+    inputType = "keyboard";
+    const date = event.target.dataset.date;
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[event.key];
+    if (!date || !step) return;
+    event.preventDefault();
+    const target = dateObject(date);
+    target.setUTCDate(target.getUTCDate() + step);
+    const key = iso(target);
+    if (!availability.has(key)) return;
+    if (!monthsNode.querySelector(`[data-date="${key}"]`)) {
+      visibleMonth = monthKey(target);
+      if (!mobile.matches && visibleMonth === lastMonth && firstMonth !== lastMonth) visibleMonth = addMonths(visibleMonth, -1);
+      render();
+    }
+    monthsNode.querySelector(`[data-date="${key}"]`)?.focus();
+  });
+
   function resetSelection() {
     arrival = null;
     departure = null;
+    previewDeparture = null;
+    previewSource = null;
     selectionNode.textContent = "Selecteer een beschikbare aankomstdag";
     updateRequestButton();
   }

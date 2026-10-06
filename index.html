@@ -23,6 +23,9 @@
   --essen:#d9cdb6;
   --riet:#586440;
   --riet-licht:#7a8760;
+  --calendar-available:#cddbb8;
+  --calendar-booked:#d9b7ac;
+  --calendar-stay:#dce2cd;
   --schemer:#c69a5e;
   --inkt:#22241f;
   --grijs:#6f6d66;
@@ -360,35 +363,24 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 .availability-day,.availability-blank{aspect-ratio:1;min-width:0}
 .availability-day{
   display:grid;place-items:center;border:1px solid rgba(34,36,31,.18);border-radius:50%;
-  color:var(--inkt);background:rgba(122,135,96,.28);font:400 14px/1 var(--body);cursor:pointer;
+  color:var(--inkt);background:var(--calendar-available);font:400 14px/1 var(--body);cursor:pointer;
   transition:border-color .2s,background .2s,color .2s;
 }
-.availability-day:not(:disabled):hover,.availability-day:not(:disabled):focus-visible{
+.availability-day:not(:disabled):not([aria-disabled="true"]):hover,.availability-day:not(:disabled):focus-visible{
   border-color:var(--riet);outline:2px solid var(--riet);outline-offset:2px;
 }
 .availability-day:disabled{cursor:not-allowed}
 .availability-day.is-non-changeover{color:var(--grijs);border-color:transparent;cursor:default}
 .availability-day.is-unavailable{
-  color:rgba(34,36,31,.58);background:rgba(183,108,98,.4);
+  color:rgba(34,36,31,.58);background:var(--calendar-booked);
   border-color:transparent;text-decoration:line-through;
 }
-.availability-day.is-changeover{
-  background:linear-gradient(90deg,rgba(183,108,98,.4) 50%,rgba(122,135,96,.28) 50%);
+.availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior){
+  background:linear-gradient(90deg,var(--calendar-booked) 50%,var(--calendar-available) 50%);
   text-decoration:none;
 }
-.availability-day.is-selected,.availability-day.is-in-range{
-  color:var(--berk);background:var(--riet);border-color:var(--riet);text-decoration:none;
-}
-.availability-day.is-changeover.is-selected,.availability-day.is-changeover.is-in-range{
-  color:var(--inkt);
-  background:linear-gradient(90deg,rgba(183,108,98,.4) 50%,var(--riet-licht) 50%);
-}
-.availability-day.is-changeover.is-friday{
-  background:linear-gradient(90deg,rgba(122,135,96,.28) 50%,rgba(183,108,98,.4) 50%);
-}
-.availability-day.is-changeover.is-friday.is-selected,
-.availability-day.is-changeover.is-friday.is-in-range{
-  background:linear-gradient(90deg,var(--riet-licht) 50%,rgba(183,108,98,.4) 50%);
+.availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior).is-friday{
+  background:linear-gradient(90deg,var(--calendar-available) 50%,var(--calendar-booked) 50%);
 }
 .availability-day.is-outside:not(.is-changeover){visibility:hidden}
 .availability-meta{
@@ -401,9 +393,9 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   display:inline-flex;align-items:center;gap:7px;color:var(--grijs);
   font-size:11px;letter-spacing:.1em;text-transform:uppercase;
 }
-.availability-dot{width:11px;height:11px;background:rgba(122,135,96,.55);border:1px solid rgba(34,36,31,.24);border-radius:50%}
+.availability-dot{width:11px;height:11px;background:var(--calendar-available);border:1px solid rgba(34,36,31,.24);border-radius:50%}
 .availability-dot.is-busy{background:rgba(183,108,98,.65);border-color:transparent}
-.availability-dot.is-turnover{background:linear-gradient(90deg,rgba(183,108,98,.65) 50%,rgba(122,135,96,.55) 50%)}
+.availability-dot.is-turnover{background:linear-gradient(90deg,rgba(183,108,98,.65) 50%,var(--calendar-available) 50%)}
 .availability-selection{color:var(--grijs);font-family:var(--disp);font-size:18px;font-style:italic}
 .availability-mail{margin-top:0;white-space:nowrap}
 .availability-mail{border:0;cursor:pointer;font-family:var(--body)}
@@ -423,6 +415,52 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
   .availability-toolbar{grid-template-columns:42px minmax(0,1fr) 42px;gap:10px}
   .availability-nav{width:42px;height:42px}
 }
+
+/* Spacious date picker, using Aanwaaien's existing palette and typography. */
+.availability-shell{max-width:900px;margin-left:auto;margin-right:auto}
+.availability-summary{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px;min-height:54px}
+.availability-selection{font-family:var(--body);font-style:normal;font-size:15px;color:var(--inkt)}
+.availability-clear{border:0;background:none;color:var(--riet);font:500 14px var(--body);text-decoration:underline;cursor:pointer;white-space:nowrap}
+.availability-clear:disabled{opacity:.4;cursor:default}
+.availability-nav{border-radius:50%;border-color:transparent}
+.availability-month h3{text-align:center;font-size:28px;margin-bottom:24px}
+.availability-weekdays,.availability-days{gap:0}
+.availability-days{row-gap:6px}
+.availability-cell{position:relative;display:grid;place-items:center;min-width:0;aspect-ratio:1}
+.availability-day{position:relative;z-index:1;width:88%;height:88%;border:0;background:var(--calendar-available);font-size:14px}
+.availability-day.is-non-changeover{color:var(--inkt)}
+.availability-day[aria-disabled="true"]{cursor:default}
+.availability-day:not([aria-disabled="true"]):not(:disabled):not(.is-stay-interior):hover{box-shadow:inset 0 0 0 30px rgba(88,100,64,.08);outline:none}
+.availability-day:focus-visible,.availability-clear:focus-visible{outline:2px solid var(--riet);outline-offset:3px}
+.availability-day.is-unavailable{background:var(--calendar-booked);color:var(--grijs);text-decoration:line-through}
+.availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior){background:linear-gradient(90deg,var(--calendar-booked) 50%,var(--calendar-available) 50%);text-decoration:none;color:var(--inkt)}
+.availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior).is-friday{background:linear-gradient(90deg,var(--calendar-available) 50%,var(--calendar-booked) 50%)}
+/* Only a visitor's preview/selection has a band; booked dates stay separate. */
+.availability-cell.is-range:before{content:"";position:absolute;z-index:0;inset:6% 0;background:var(--calendar-stay);pointer-events:none}
+.availability-cell.is-range-start:before{left:50%}
+.availability-cell.is-range-end:before{right:50%}
+.availability-cell.is-range-left:before{border-top-left-radius:999px;border-bottom-left-radius:999px}
+.availability-cell.is-range-right:before{border-top-right-radius:999px;border-bottom-right-radius:999px}
+.availability-day.is-stay-interior:not(.is-unavailable){background:transparent;color:var(--inkt);box-shadow:none}
+.availability-day.is-selected:not(.is-unavailable),.availability-day.is-preview-end:not(.is-unavailable){background:var(--riet);color:var(--berk);box-shadow:inset 0 0 0 2px var(--riet);font-weight:600}
+.availability-day.is-preview-end:not(.is-unavailable){outline:2px solid var(--riet);outline-offset:2px}
+.availability-day:not(.is-selected):not(.is-preview-end):not(.is-stay-interior):not(.is-unavailable):not(:disabled):not([aria-disabled="true"]):hover{box-shadow:inset 0 0 0 30px color-mix(in srgb,var(--calendar-available) 8%,transparent);border-color:var(--calendar-available)}
+.availability-day:not(.is-selected):not(.is-preview-end):not(.is-unavailable):not(:disabled):focus-visible{outline-color:var(--calendar-available)}
+.availability-day.is-today:after{content:"";position:absolute;bottom:12%;width:3px;height:3px;border-radius:50%;background:currentColor}
+.availability-note{position:absolute;z-index:5;bottom:100%;left:50%;transform:translateX(-50%);width:max-content;max-width:190px;padding:8px 12px;background:var(--inkt);color:var(--berk);border-radius:8px;font:12px/1.4 var(--body);text-align:center;pointer-events:none;visibility:hidden}
+.availability-cell:hover .availability-note,.availability-cell:focus-within .availability-note{visibility:visible}
+@media(max-width:760px){
+ .availability-summary{align-items:flex-start;gap:12px}
+ .availability-summary .availability-selection{min-height:7em}
+ .availability-months{touch-action:pan-y}
+ .availability-month h3{font-size:28px}
+ .availability-day{font-size:14px}
+ .availability-toolbar p{font-size:10px;letter-spacing:.08em}
+ .availability-note{max-width:140px}
+ .availability-cell:nth-child(7n+1) .availability-note{left:0;transform:none}
+ .availability-cell:nth-child(7n) .availability-note{left:auto;right:0;transform:none}
+}
+
 </style>
 </head>
 <body>
@@ -550,6 +588,10 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
       <p class="availability-error" data-calendar-error role="alert" hidden>De beschikbaarheid is tijdelijk niet beschikbaar. Probeer het later opnieuw.</p>
 
       <div data-calendar-content hidden>
+        <div class="availability-summary">
+          <p class="availability-selection" data-calendar-selection aria-live="polite">Selecteer een beschikbare aankomstdag</p>
+          <button class="availability-clear" data-calendar-clear type="button" disabled>Wis datums</button>
+        </div>
         <div class="availability-toolbar" aria-label="Kalendernavigatie">
           <button class="availability-nav" data-calendar-previous type="button" aria-label="Vorige maand">‹</button>
           <p>Alleen maandag en vrijdag zijn wisseldagen</p>
@@ -564,7 +606,6 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
               <span><i class="availability-dot is-busy"></i>Bezet</span>
               <span><i class="availability-dot is-turnover"></i>Wisseldag</span>
             </div>
-            <p class="availability-selection" data-calendar-selection aria-live="polite">Selecteer een beschikbare aankomstdag</p>
           </div>
           <button class="knop availability-mail" data-calendar-mail type="button" aria-disabled="true" disabled>Vraag deze periode aan <span class="arrow">→</span></button>
         </div>
