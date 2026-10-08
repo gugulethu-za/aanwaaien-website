@@ -438,6 +438,7 @@ footer .cursief{font-family:var(--disp);font-style:italic;text-transform:none;fo
 .availability-day.is-unavailable{background:var(--calendar-booked);color:var(--grijs);text-decoration:line-through}
 .availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior){background:linear-gradient(90deg,var(--calendar-booked) 50%,var(--calendar-available) 50%);text-decoration:none;color:var(--inkt)}
 .availability-day.is-changeover:not(.is-unavailable):not(.is-selected):not(.is-preview-end):not(.is-stay-interior).is-friday{background:linear-gradient(90deg,var(--calendar-available) 50%,var(--calendar-booked) 50%)}
+.availability-day.is-green-day:not(.is-unavailable):not(.is-outside):not(.is-selected):not(.is-preview-end):not(.is-stay-interior){background:#d1fae5;color:#065f46;border-radius:50%}
 /* Only a visitor's preview/selection has a band; booked dates stay separate. */
 .availability-cell.is-range:before{content:"";position:absolute;z-index:0;inset:6% 0;background:var(--calendar-stay);pointer-events:none}
 .availability-cell.is-range-start:before{left:50%}

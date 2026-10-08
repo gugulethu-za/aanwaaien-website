@@ -1,6 +1,10 @@
 import { buildRequestMailto } from "./request-email.js";
 import { canStay, isChangeover, isValidArrival } from "./calendar-rules.js";
 
+function isGreenDay(date) {
+  return date.getMonth() === 9 && (date.getDay() === 1 || date.getDay() === 5);
+}
+
 
 const root = document.querySelector("#availability-calendar");
 
@@ -107,6 +111,11 @@ if (root) {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "availability-day";
+        // Use a local calendar date for the helper; the stored date keys are UTC.
+        if (status && status !== "unavailable" &&
+          isGreenDay(new Date(start.getUTCFullYear(), start.getUTCMonth(), day))) {
+          button.classList.add("is-green-day");
+        }
         const cell = document.createElement("div");
         cell.className = "availability-cell";
         const number = document.createElement("span");
